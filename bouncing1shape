@@ -1,0 +1,48 @@
+// Bouncing.pde
+Ball b;
+
+void setup() {
+  size(800, 500);
+  b = new Ball(100, 100, 4, 3, 40, color(200, 100, 250));
+}
+
+void draw() {
+  background(30);
+  b.update();
+  b.display();
+}
+
+class Ball {
+  float x, y;   // position
+  float vx, vy; // velocity
+  float r;      // radius
+  color c;      // color
+  
+  Ball(float x_, float y_, float vx_, float vy_, float r_, color c_) {
+    x = x_;
+    y = y_;
+    vx = vx_;
+    vy = vy_;
+    r = r_;
+    c = c_;
+  }
+  
+  void update() {
+    x += vx;
+    y += vy;
+    
+    // Bounce off walls
+    if (x - r < 0 || x + r > width) {
+      vx *= -1;
+    }
+    if (y - r < 0 || y + r > height) {
+      vy *= -1;
+    }
+  }
+  
+  void display() {
+    fill(c);
+    noStroke();
+    ellipse(x, y, r*2, r*2);
+  }
+}
