@@ -1,0 +1,86 @@
+// Bouncing.pde
+
+int maxShapes = 10;               // max number of shapes
+Shape[] shapes = new Shape[maxShapes];
+int shapeCount = 0;
+
+void setup() {
+  size(800, 500);
+  noStroke();
+  
+  // create a few starter shapes
+  for (int i = 0; i < 5; i++) {
+    shapes[i] = new Shape(random(width), random(height));
+    shapeCount++;
+  }
+}
+
+void draw() {
+  background(25);
+  
+  // use for-each loop to update and display shapes
+  for (Shape s : shapes) {
+    if (s != null) {  // avoid null pointer errors
+      s.update();
+      s.display();
+    }
+  }
+}
+
+// add new shape on mouse click
+void mousePressed() {
+  Shape newShape = new Shape(mouseX, mouseY);
+
+  if (shapeCount < maxShapes) {
+    shapes[shapeCount] = newShape;
+    shapeCount++;
+  } else {
+    // remove oldest by shifting left
+    for (int i = 0; i < maxShapes - 1; i++) {
+      shapes[i] = shapes[i + 1];
+    }
+    shapes[maxShapes - 1] = newShape;
+  }
+}
+
+// ---------------- SHAPE CLASS ----------------
+class Shape {
+  float x, y;   // position
+  float vx, vy; // velocity
+  float size;   // shape size
+  color c;      // color
+
+  // default constructor
+  Shape() {
+    this(random(width), random(height));
+  }
+
+  // constructor with position
+  Shape(float startX, float startY) {
+    x = startX;
+    y = startY;
+    size = random(20, 50);
+    vx = random(-3, 3);
+    vy = random(-3, 3);
+    c = color(random(255), random(255), random(255));
+  }
+
+  // update position and bounce
+  void update() {
+    x += vx;
+    y += vy;
+
+    if (x - size/2 < 0 || x + size/2 > width) {
+      vx *= -1;
+    }
+    if (y - size/2 < 0 || y + size/2 > height) {
+      vy *= -1;
+    }
+  }
+
+  // draw the shape
+  void display() {
+    fill(c);
+    ellipse(x, y, size, size);
+  }
+}
